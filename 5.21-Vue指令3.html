@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #app{
+            width: 300px;
+            height: 200px;
+            background-color: rgb(220, 197, 26);
+            margin: 20px auto;
+            border: 1px solid #000;
+            text-align: center;
+            line-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div>小江售货机</div>
+        <button @click = 'fn(10)'>巧克力10元</button>
+        <button @click = 'fn(8)'>牛奶8元</button>
+        <p>余额{{money}}</p>
+    </div>
+    <script src="./Vue.js">
+    </script>
+
+    <script>
+        const app = new Vue({
+            el:'#app',
+            data:{
+                money: 100
+            },
+            methods:{
+                fn(price){
+                    this.money-=price
+                }
+            }
+        })
+    </script>
+</body>
+</html>
