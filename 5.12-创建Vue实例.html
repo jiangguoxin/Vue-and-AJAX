@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ msg }}
+        <br>
+        {{ min }}
+        <br>
+        {{friend.name}}
+        <br>
+        {{friend.age>18?'成年了':'未成年'}}
+    </div>
+
+    <script src="./Vue.js">
+    </script>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                msg: 'Hello,world',
+                min: '江国鑫',
+                friend: {
+                    name: 'zhangsan',
+                    age: 18,
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
