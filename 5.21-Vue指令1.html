@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 100px;
+            background-color: rgb(220, 197, 26);
+            margin: 20px auto;
+            border: 1px solid #000;
+            text-align: center;
+            line-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+    v-show:控制元素显示隐藏；--v-show="条件表达式"--加display:none隐藏元素，display:block显示元素
+    v-if:控制元素显示隐藏(条件渲染) -- v-if="条件表达式"--根据判断条件 控制创建和销毁元素
+    -->
+    <!-- 
+    v-else:
+    v-else-if:
+    都是配合v-if使用，控制元素显示隐藏
+    -->
+    <div id="app">
+        <div class="box" v-show="flag">v-show控制</div>
+        <div class="box" v-if="flag">v-if控制</div>
+    </div>
+
+    <div id="app1">
+        <div v-if="gender === 1" style="font-size: 40px;">性别：男</div>
+        <div v-else style="font-size: 40px;">性别：女</div>
+    </div>
+
+    <script src="./Vue.js">    
+    </script>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                flag: true
+            }
+        })
+        const app1 = new Vue({
+            el: '#app1',
+            data: {
+                gender: 2
+            }
+        })
+    </script>
+</body>
+</html>
