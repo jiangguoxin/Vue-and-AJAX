@@ -17,11 +17,15 @@
     <div id="app">
         <h3>水果店</h3>
         <ul>
-            <li v-for="item in List">
+            <li v-for="item in List" :key = 'item.id'>
                 {{ item }}
             </li>
         </ul>
     </div>
+    <!-- 
+    补充知识点：给列表项添加唯一标识。便于Vue进行列表项的正确排序复用
+    一般都是 :key = 'item.id'
+    -->
 
 
     <script src="./Vue.js">
