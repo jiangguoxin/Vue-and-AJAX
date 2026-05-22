@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <img :src="url" v-bind:title="altText" style="width: 300px; height: auto;">
+    </div>
+    <!-- 
+    v-bind:动态的设置html的标签属性
+    -->
+    <div id="app1">
+        <button v-show = 'index > 0' @click = "index--">上一页</button>
+        <div>
+            <img :src="List[index]" alt="" style="width: 300px; height: auto;">
+        </div>
+        <button v-show = 'index < List.length - 1' @click = "index++">下一页</button>
+    </div>
+    <script src="./Vue.js">
+    </script>
+    
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                url: './images/DSC00564.JPG',
+                altText: '灯笼花'
+            }
+        })
+        const app1 = new Vue({
+            el: '#app1',
+            data: {
+                index:0,
+                List:[
+                    "./images/-1619789478_from_sharpP.jpeg",
+                    "./images/-279555979_from_sharpP.jpeg",
+                    "./images/DSC00564.JPG",
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
+<!-- 
+本次切换案例：
+    注意点：
+        1：v-show-true为显示；false为隐藏
+        2：v-show = '表达式'-里面的布尔值的使用
+-->
