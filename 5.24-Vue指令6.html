@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            font-family: '微软雅黑', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #d8706b;
+            font-size: 46px;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        .todo-app {
+            width: 500px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* 底部堆叠纸张效果 */
+        .todo-app::before,
+        .todo-app::after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            border: 1px solid #ededed;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .todo-app::before {
+            bottom: -5px;
+            right: 2px;
+            left: 2px;
+            height: 5px;
+            z-index: -1;
+        }
+
+        .todo-app::after {
+            bottom: -10px;
+            right: 5px;
+            left: 5px;
+            height: 10px;
+            z-index: -2;
+        }
+
+        .todo-input-pane {
+            display: flex;
+        }
+
+        .todo-input-pane input {
+            flex: 1;
+            border: 1px solid #ededed;
+            border-right: none;
+            outline: none;
+            padding: 16px 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .todo-input-pane input::placeholder {
+            color: #dedede;
+            font-style: italic;
+        }
+
+        .todo-input-pane button {
+            width: 140px;
+            background-color: #d8706b;
+            color: #fff;
+            border: 1px solid #d8706b;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .todo-input-pane button:hover {
+            background-color: #c45b56;
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #ededed;
+            border-left: 1px solid #ededed;
+            border-right: 1px solid #ededed;
+            font-size: 16px;
+            color: #444;
+            transition: background-color 0.2s;
+        }
+
+        .todo-list li:hover {
+            background-color: #fafafa;
+        }
+
+        .todo-list li .text {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .todo-list li .text .index {
+            color: #888;
+        }
+
+        .todo-list li .destroy {
+            color: #cc9a9a;
+            font-size: 22px;
+            cursor: pointer;
+            display: none;
+            line-height: 1;
+        }
+
+        .todo-list li:hover .destroy {
+            display: block;
+        }
+
+        .todo-list li .destroy:hover {
+            color: #af5b5e;
+        }
+
+        .todo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            border: 1px solid #ededed;
+            border-top: none;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .todo-footer .clear {
+            cursor: pointer;
+        }
+
+        .todo-footer .clear:hover {
+            text-decoration: underline;
+        }
+
+
+
+        .son {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+        }
+        .father {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+    指令修饰符：
+        1.按键修饰符：
+            @keyup.enter    ->键盘回车监听
+        2.v-model修饰符：
+            v-model.trim    ->去除首尾空格
+            v-model.number  ->转数字
+        3.事件修饰符：
+            @事件名.stop    ->阻止冒泡
+            @事件名.prevent ->阻止默认行为
+    -->
+
+    <!-- 这里使用上次案例演示keyup.enter -->
+    <div id="app">
+        <div class="header">
+            <h1>小江记事本</h1>
+        </div>
+
+        <div class="todo-app">
+            <!-- 输入框区域 -->
+            <div class="todo-input-pane">
+                <input @keyup.enter='add' v-model='renwu' type="text" placeholder="请输入任务" />
+                <button @click='add'>添加任务</button>
+            </div>
+
+            <!-- 列表区域 -->
+            <ul class="todo-list">
+                <li v-for="(item, index) in List" :key="item.id">
+                    <div class="text">
+                        <span class="index">{{index + 1}}.</span>
+                        <span>{{item.name}}</span>
+                    </div>
+                    <span class="destroy" @click=del(item.id)>×</span>
+                </li>
+            </ul>
+
+            <!-- 底部统计区域 -->
+            <div class="todo-footer" v-show='List.length > 0'>
+                <span class="count">合计: {{List.length}}</span>
+                <span class="clear" @click='clear'>清空任务</span>
+            </div>
+        </div>
+    </div>
+    <br><br><br><br><br><br>
+
+
+    <!-- v-model修饰符：.trim和.number -->
+    <div class="app1">
+        姓名<input type="text" v-model.trim='username'><br><br>
+        年纪<input type="text" v-model.number='age'>
+    </div>
+
+
+    <!-- 阻止冒泡和阻止默认行为 -->
+    <div class="app2">
+        <div class='father' @click = alert1>
+            <div class="son" @click.stop='alert'>儿子</div>
+        </div>
+        
+        <br>
+        <a @click.prevent href="http://www.baidu.com">阻止默认行为</a>
+    </div>
+
+    <!-- js部分 -->
+    <script src="./Vue.js">
+    </script>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                renwu: '',
+                List: [
+                    { id: 1, name: '跑步锻炼20分钟' },
+                    { id: 2, name: '复习数组语法' }
+                ]
+            },
+            methods: {
+                add() {
+                    if (this.renwu.trim() === '') {
+                        alert('请输入任务内容')
+                        return
+                    }
+                    this.List.unshift({
+                        id: +new Date(), // 修复拼写错误，Data 改为 Date
+                        name: this.renwu,
+                    })
+                    this.renwu = ''
+                },
+                del(id) {
+                    this.List = this.List.filter(item => item.id !== id)
+                },
+                clear() {
+                    this.List = []
+                }
+            }
+        })
+
+
+        // v-model修饰符
+        const app1 = new Vue({
+            el: '.app1',
+            data: {
+                username: '',
+                age: '',
+            }
+        })
+
+        // 阻止冒泡
+        const app2 = new Vue({
+            el: '.app2',
+            methods: {
+                alert() {
+                    alert('点击了儿子')
+                },
+                alert1(){
+                    alert('点击了父亲')
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
