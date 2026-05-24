@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            border-bottom: 2px solid #c81623;
+        }
+
+        li {
+            text-align: center;
+        }
+
+        li a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        li a.active {
+            background-color: #c81623;
+            color: #fff;
+        }
+
+        /* ----------------进度条案例样式---------------- */
+        .progress {
+            width: 400px;
+            height: 20px;
+            background-color: #272727;
+            /* 进度条外层轨道颜色 */
+            border-radius: 10px;
+            margin: 50px auto 30px;
+        }
+
+        .inner {
+            width: 50%;
+            /* 控制这个宽度来展示进度 */
+            height: 20px;
+            border-radius: 10px;
+            text-align: right;
+            position: relative;
+            background-color: #409eff;
+            /* 蓝色进度条 */
+            background-size: 20px 20px;
+            box-sizing: border-box;
+            transition: all 1s;
+            /* 动画过渡效果 */
+        }
+
+        .inner span {
+            position: absolute;
+            right: -10px;
+            /* 调整文字到下面居中位置 */
+            top: 25px;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .btn-group {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+    v-bind操作class：   ：class = "对象/数组" 对象就是键值对形式
+    v-bind操作style；   ：style = "样式对象"
+    -->
+
+    <!-- 京东秒杀Tab高亮案例 -->
+    <div id="app">
+        <ul>
+            <li v-for="(item,index) in list" :key="item.id" @click="activeIndex = index">
+                <a :class="{active: index === activeIndex}" href="#">{{item.name}}</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ----------------------------------------- -->
+    <hr style="margin: 40px 0;">
+
+    <!-- 进度条效果案例 -->
+    <div id="app2">
+        <!-- 进度条区域 -->
+        <div class="progress">
+            <div class="inner" :style="{ width: percent + '%' }">
+                <span>{{ percent }}%</span>
+            </div>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="btn-group">
+            <button @click='percent = 25'>设置25%</button>
+            <button @click='percent = 50'>设置50%</button>
+            <button @click='percent = 75'>设置75%</button>
+            <button @click='percent = 100'>设置100%</button>
+        </div>
+    </div>
+
+
+    <script src="./Vue.js"></script>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                activeIndex: 0,  //记录高亮
+                list: [
+                    { id: 1, name: '京东秒杀' },
+                    { id: 2, name: '每日特价' },
+                    { id: 3, name: '品类秒杀' }
+                ]
+            }
+        })
+        const app2 = new Vue({
+            el: '#app2',
+            data: {
+                percent: 0,
+            }
+        })
+    </script>
+</body>
+
+</html>
