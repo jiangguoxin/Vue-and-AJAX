@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            width: 300px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 计算属性：基于现有的数据，计算出来的新属性。依赖的数据变化，自动重新计算 -->
+    <!-- 声明在computed配置项中(和data/methods同) -->
+    <!-- 
+    computed计算属性和methods方法的区别：
+        1. 计算属性会被缓存，只有依赖的数据发生变化才会重新计算；方法每次调用都会执行函数体内的代码    ->计算属性性能高
+        2. 计算属性适合用于复杂的逻辑处理，方法适合用于简单的逻辑处理
+    -->
+    <!-- 
+    计算属性的完整写法：适用于不仅要读取访问，且修改
+    computed: {
+        totalCount(计算属性名): {
+            get() {
+                // 读取访问时执行的函数体
+                return 结果
+            },
+            set(newValue) {
+                // 修改访问时执行的函数体，newValue是修改后的新值
+            }
+        }
+    }
+     -->
+    -->
+    <div id="app">
+        <h3>小黑的礼物清单</h3>
+        <table>
+            <tr>
+                <th>名字</th>
+                <th>数量</th>
+            </tr>
+            <tr v-for="(item, index) in list" :key="item.id">
+                <td>{{ item.name }}</td>
+                <td>{{ item.num }}个</td>
+            </tr>
+        </table>
+
+        <!-- 目标：统计求和，求得礼物总数 -->
+        <p>礼物总数： {{totalCount}} 个</p>
+    </div>
+
+    <script src="./Vue.js"></script>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                list: [
+                    { id: 1, name: '玩具车', num: 9 },
+                    { id: 2, name: '积木', num: 37 },
+                    { id: 3, name: '毛绒玩具', num: 1 }
+                ]
+            },
+            computed: {
+                // totalNum() {
+                //     let sum = 0
+                //     for (let i = 0; i < this.list.length; i++) {
+                //         sum += this.list[i].num
+                //     }
+                //     return sum
+                // }
+
+                // 数组的reduce方法：对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。
+                totalCount() {
+                    let total = this.list.reduce((sum, item) => sum + item.num, 0)
+                    return total
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
