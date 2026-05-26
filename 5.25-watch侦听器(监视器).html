@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            padding: 50px;
+        }
+
+        #app {
+            width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .query {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .box {
+            display: flex;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .input-wrap,
+        .output-wrap {
+            flex: 1;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-wrap {
+            border-right: 1px solid #eee;
+        }
+
+        .input-wrap textarea {
+            flex: 1;
+            border: none;
+            resize: none;
+            padding: 15px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-wrap span {
+            padding: 10px;
+            font-size: 12px;
+            color: #888;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .output-wrap {
+            background-color: #f9f9f9;
+        }
+
+        .transbox {
+            padding: 15px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+    watch侦听器：监视数据变化，执行一些 业务逻辑 或 异步操作
+    简单写法： -> watch: { 数据名(新值，旧值){ 业务逻辑 } }
+    完整写法： -> watch: { 
+    数据名: {
+            handler(新值，旧值){ 业务逻辑 }, 
+            immediate: true/false, 
+            deep: true/false 
+        } 
+    }
+    -->
+
+    <div id="app">
+        <div class="query">
+            <span>翻译成的语言：</span>
+            <select v-model="obj.lang">
+                <option value="italy">意大利</option>
+                <option value="english">英语</option>
+                <option value="german">德语</option>
+            </select>
+        </div>
+
+        <!-- 翻译框 -->
+        <div class="box">
+            <div class="input-wrap">
+                <textarea v-model="obj.words"></textarea>
+                <span><i></i>文档翻译</span>
+            </div>
+            <div class="output-wrap">
+                <div class="transbox">{{result}}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提前引入所需的依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // 接口地址：https://applet-base-api-t.itheima.net/api/translate
+        // 需求：监听words的变化，发送请求获取翻译结果
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                // words: '',
+                // result: '',   //翻译结果
+                obj: {
+                    words: '小黑',
+                    lang: 'italy',
+                },
+                result:'',
+            },
+            timer: null,//延时器id
+            // obj: {
+            //     words() { }
+            // },
+            watch: {
+                // 该方法会在数据变化时调用
+                // oldvalue一般不用
+                // 如果这里的是对象的话，就要'obj.words'
+                // 'obj.words'(newvalue){
+                //     console.log(newvalue);
+
+                // }
+
+
+                // 下面是简单写法
+                // words(newvalue) {
+                // console.log(newvalue);
+
+                // 防抖：延迟执行 -> 干啥事先等一等
+                // 延迟一会，一段时间内没有再次触发，才执行
+
+                // clearTimeout(this.timer)
+                // this.timer = setTimeout(async () => {
+                //     if (newvalue.trim() === '') {
+                //         this.result = ''
+                //         return
+                //     }
+                //     const res = await axios({
+                //         // 这里的async和await需要回忆起来
+                //         url: 'https://applet-base-api-t.itheima.net/api/translate',
+                //         method: 'GET',
+                //         params: {
+                //             words: newvalue,
+                //         }
+                //     })
+                //     this.result = res.data.data
+                // }, 300)
+                // }
+
+                // 以上是简单写法
+                // console.log(res);
+                // console.log(res.data.data);
+                //下面是完整写法
+                obj: {
+                    deep: true,
+                    immediate: true,
+                    handler(newvalue) {
+                        clearTimeout(this.timer)
+                        this.timer = setTimeout(async () => {
+                            if (newvalue.words.trim() === '') {
+                                this.result = ''
+                                return
+                            }
+                            const res = await axios({
+                                // 这里的async和await需要回忆起来
+                                url: 'https://applet-base-api-t.itheima.net/api/translate',
+                                method: 'GET',
+                                // params: {
+                                //     words: newvalue,
+                                // }
+                                params:newvalue,
+                            })
+                            this.result = res.data.data
+                        }, 300)
+                    }
+                }
+            }
+            // 具体讲解：(1) watch语法 (2) 具体业务实现
+        })
+    </script>
+</body>
+
+</html>
+
+
+
+<!-- 
+总结：
+    1.本篇学习了watch侦听器的相关用法，其中包括简单写法和完整写法：
+        (1)简单写法：watch: { 
+            数据名(新值，旧值){
+                业务逻辑 
+            } 
+        }
+        (2)这里用到AJAX的axios有关的东西
+        axios({
+            url:'',
+            method:''
+            params:{}
+        })
+        (3)以及async和await解决回调地狱 注意：这里设置防抖的时候要写成  最后const res = await axios(){}将结果接过来
+                                    clearTimeout(this.timer)
+                                    this.timer = setTimeout(async ()=>{
+                                        watch:{}
+                                    })
+            watch:{
+                async words(newvalue){
+                    const res = await axios({
+                    url: 'https://applet-base-api-t.itheima.net/api/translate',
+                    method: 'GET',
+                    params: {
+                        words: newvalue,
+                    })
+                }
+            }
+        (4)最后是完整写法：加入了deep和immediate，使用handlei，详细使用见上面
+            obj:{
+                    deep: true,
+                    immediate: true,
+                    handler(newvalue){}
+                }
+-->
