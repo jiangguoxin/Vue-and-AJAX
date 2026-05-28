@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻列表案例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        #app {
+            width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 搜索框样式 */
+        .search-box {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #007bff;
+        }
+
+        /* 新闻列表样式 */
+        .news-list {
+            list-style: none;
+        }
+
+        .news-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-content {
+            flex: 1;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .news-info {
+            font-size: 14px;
+            color: #999;
+            display: flex;
+            gap: 20px;
+        }
+
+        .news-img img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 简易搜索框 -->
+    <div id="search-app" style="width: 800px; margin: 20px auto; display: flex; gap: 10px;">
+        <input id="inp" type="text" placeholder="请输入搜索内容..."
+            style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        <button
+            style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">搜索</button>
+    </div>
+
+    <hr style="margin: 40px 0; border: 0; border-top: 1px dashed #ccc;">
+
+    <!-- 新闻列表案例 -->
+    <div id="app">
+        <ul class="news-list">
+            <!-- 这里可以手动写几个静态的 li 方便你看到样式 -->
+            <li class="news-item" v-for="(item,index) in List" :key="item.id">
+                <div class="news-content">
+                    <div class="news-title">{{ item.title}}</div>
+                    <div class="news-info">
+                        <span>{{item.source}}</span>
+                        <span>{{item.time}}</span>
+                    </div>
+                </div>
+                <div class="news-img">
+                    <img :src="item.img" alt="">
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="./Vue.js">
+    </script>
+
+
+    <script>
+        // 你可以在这里自己写 JS 逻辑
+        const app1 = new Vue({
+            el: '#app',
+            data: {
+                List: []
+            },
+            async created() {
+                const res = await axios.get('http://hmajax.itheima.net/api/news')
+                // console.log(res);
+                this.List = res.data.data
+                // console.log(List);
+
+            }
+        })
+        const app2 = new Vue({
+            el: '#search-app',
+            data: {
+                words: '',
+            },
+            mounted() {
+                document.querySelector('#inp').focus()
+            }
+        })
+    </script>
+</body>
+
+</html>
