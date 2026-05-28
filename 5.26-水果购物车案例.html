@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水果购物车</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .breadcrumb {
+            padding: 15px 20px;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 1px solid #eee;
+        }
+
+        .breadcrumb span.active {
+            color: #666;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .cart-table th {
+            padding: 15px;
+            background-color: #fafafa;
+            font-weight: normal;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+
+        .cart-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .fruit-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background-color: #f8f8f8;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background-color: #eee;
+        }
+
+        .quantity-input {
+            width: 40px;
+            height: 30px;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            outline: none;
+        }
+
+        .delete-btn {
+            padding: 5px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fafafa;
+        }
+
+        .select-all {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .total-price {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .total-price span {
+            color: #e74c3c;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            padding: 10px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .cart-row.active {
+            background-color: #f1f8ff;
+        }
+
+        .empty-state {
+            padding: 50px 0;
+            text-align: center;
+            color: #666;
+        }
+
+        .empty-state img {
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="app">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumb">
+            <span style="color: coral;">🏠</span> / <span class="active">购物车</span>
+        </div>
+
+        <!-- 购物车内容 -->
+        <div v-if="fruitList.length > 0">
+            <!-- 购物车表格 -->
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>选中</th>
+                        <th>图片</th>
+                        <th>单价</th>
+                        <th>个数</th>
+                        <th>小计</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="cart-row" v-for="(item,index) in fruitList" :key="item.id"
+                        :class="{ active: item.isChecked }">
+                        <td><input type="checkbox" v-model="item.isChecked"></td>
+                        <td><img :src="item.img" :alt="item.name" class="fruit-img"></td>
+                        <td>{{item.price}}</td>
+                        <td>
+                            <div class="quantity-control">
+                                <button :disabled="item.num<=1" class="quantity-btn" @click="red(item.id)">-</button>
+                                <input type="text" class="quantity-input" v-model.number="item.num">
+                                <button class="quantity-btn" @click="add(item.id)">+</button>
+                            </div>
+                        </td>
+                        <td>{{ item.num*item.price}}</td>
+                        <td><button class="delete-btn" @click="del(item.id)">删除</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 底部结算栏 -->
+            <div class="cart-footer">
+                <label class="select-all">
+                    <input type="checkbox" v-model="isAll"> 全选
+                </label>
+                <div class="total-price">
+                    总价：<span>￥{{ totalPrice }}</span>
+                    <button class="checkout-btn">结算({{ totalCount }})</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 空数据状态 -->
+        <div v-else class="empty-state">
+            <img src="https://img.icons8.com/plasticine/100/000000/shopping-cart.png" alt="空购物车">
+            <p>空空如也</p>
+            <span style="color: #999; font-size: 14px;">您的购物车还是空的，快去选购吧！</span>
+        </div>
+    </div>
+
+
+    <script src="./Vue.js">
+    </script>
+
+    <script>
+        const defaultArr = [
+            {
+                        id: 1,
+                        name: '火龙果',
+                        price: 6,
+                        num: 2,
+                        isChecked: true,
+                        img: 'https://img.icons8.com/color/96/000000/dragon-fruit.png'
+                    },
+                    {
+                        id: 2,
+                        name: '草莓',
+                        price: 7,
+                        num: 1,
+                        isChecked: false,
+                        img: 'https://img.icons8.com/color/96/000000/strawberry.png'
+                    },
+                    {
+                        id: 3,
+                        name: '西瓜',
+                        price: 6,
+                        num: 5,
+                        isChecked: true,
+                        img: 'https://img.icons8.com/color/96/000000/watermelon.png',
+                    },
+                    {
+                        id: 4,
+                        name: '苹果',
+                        price: 6,
+                        num: 5,
+                        isChecked: true,
+                        img: 'https://img.icons8.com/color/96/000000/apple.png',
+                    },
+                    {
+                        id: 5,
+                        name: '桃子',
+                        price: 8,
+                        num: 9,
+                        isChecked: true,
+                        img: 'https://img.icons8.com/color/96/000000/peach.png',
+                    },
+        ]
+        const app = new Vue({
+            el: '#app',
+            data: {
+                fruitList: JSON.parse(localStorage.getItem('list')) || defaultArr
+            },
+            methods: {
+                add(id) {
+                    const fruitList = this.fruitList.find(item => item.id === id)
+                    fruitList.num++
+                },
+                red(id) {
+                    const fruitList = this.fruitList.find(item => item.id === id)
+                    fruitList.num--
+                },
+                del(id) {
+                    this.fruitList = this.fruitList.filter(item => item.id !== id)
+                }
+            },
+            computed: {
+                // isAll(){
+                //     return this.fruitList.every(item=>item.isChecked)
+                // }
+                isAll: {
+                    get() {
+                        return this.fruitList.every(item => item.isChecked)
+                    },
+                    set(value) {
+                        this.fruitList.forEach(item => item.isChecked = value)
+                    }
+                },
+                totalCount() {
+                    return this.fruitList.reduce((sum, item) => {
+                        if (item.isChecked) {
+                            return sum + item.num
+                        } else {
+                            return sum
+                        }
+                    }, 0)
+                },
+                totalPrice() {
+                    return this.fruitList.reduce((sum, item) => {
+                        if (item.isChecked) {
+                            return sum + item.num * item.price
+                        } else {
+                            return sum
+                        }
+                    }, 0)
+                }
+            },
+            watch: {
+                fruitList: {
+                    deep: true,
+                    handler(newvalue) {
+                        // console.log(newvalue);
+                        localStorage.setItem('list',JSON.stringify(newvalue))
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
+<!-- 
+总结：
+    1.十分考验刚刚学习到的知识，综合性强
+    2.涉及到：
+        渲染功能：v-if/v-else   v-for   :class
+        删除功能：点击传参  filter过滤覆盖原数组
+        修改个数：点击传参  find找对象
+        全选反选：计算属性computed  完整写法set/get
+        统计选中的总价和总数量：计算属性computed    reduce条件求和
+        持久化到本地：watch监视 localStorage，JSON.stringfy JSON.parse
+-->
