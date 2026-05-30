@@ -1,6 +1,7 @@
 <template>
   <div class="jiang-header">
     我是jiang-header
+    <JiangButton></JiangButton>
   </div>
 </template>
 
