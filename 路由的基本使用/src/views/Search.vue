@@ -20,7 +20,8 @@ export default {
   name: "SearchCard",
   created(){
     // 获取路由参数：this.$route.query.key
-    this.$route.query.key
+    // 查询参数获取：this.$route.query.key
+    // 动态路由获取：this.$route.params.words}
   }
 };
 </script>

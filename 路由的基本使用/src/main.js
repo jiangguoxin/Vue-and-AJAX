@@ -9,7 +9,8 @@ Vue.config.productionTip = false
 // 2.准备导航链接，配置路由出口
 new Vue({
   render: h => h(App),
-  router
+  router,
+  mode:'history'
 }).$mount('#app')
 
 
