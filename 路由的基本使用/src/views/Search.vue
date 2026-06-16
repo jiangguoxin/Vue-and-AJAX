@@ -2,6 +2,9 @@
   <div class="page-container">
     <div class="search-result-card">
       <!-- <p>搜索关键字: {{ $route.query.key}}</p> -->
+      <!-- <p>搜索关键字: {{ $route.params.words}}</p>  -->
+      <!-- <p>搜索关键字: {{ $route.query.key}}</p>  -->
+      <!-- <p>搜索关键字: {{ $route.params.wordss}}</p>  -->
       <p>搜索关键字: {{ $route.params.words}}</p> 
       <p>搜索结果:</p>
       <ul>

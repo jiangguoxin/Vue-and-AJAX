@@ -18,7 +18,8 @@ const router = new VueRouter({  //制定路由规则
     // {path:'/search',component:Search}
     {path:'/',redirect:'/home'},
     {path:'/home',component:Home},
-    {path:'/search/:words?',component:Search},
+    // {path:'/search/:wordss?',component:Search},
+    {name:'search',path:'/search/words?',component:Search},
     {path:'*',component:NotFind}
   ]
 })
@@ -46,4 +47,27 @@ export default router
 */
 /*
 重定向：匹配path后，强制跳转path路径
+*/
+/*
+编程式导航：(两种语法)
+  (1).path路径跳转：
+    this.router.push('路由路径')
+    ·传参：
+      this.router.push('/路由路径参数名1=参数值1&参数名2=参数值2')
+      this.router.push({
+        path：'/路径',
+        query：{
+          参数名1：' 参数值1'
+          参数名2：' 参数值2'
+        }
+      })
+    ·接收传递过来的值：$route.query.参数名
+  (2).name命名路由跳转  (适合path路径长的场景)
+    {name：'路由名',path:'xxx',component:xxx}
+    this.router.push({
+      name：'路由名'
+    })
+    ·传参：
+      this.router.push('/路径/参数值')
+    ·接收传递过来的值：$route.params.参数名   (动态路由传参需要配路由)
 */

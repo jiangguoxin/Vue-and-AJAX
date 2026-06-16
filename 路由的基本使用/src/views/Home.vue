@@ -8,8 +8,8 @@
         <span class="logo-text">黑马程序员</span>
       </div>
       <div class="search-box">
-        <input type="text" placeholder="输入搜索内容..." class="search-input" />
-        <button class="search-btn">搜索一下</button>
+        <input v-model="inpValue" type="text" placeholder="输入搜索内容..." class="search-input" />
+        <button class="search-btn" @click="goSearch">搜索一下</button>
       </div>
       <div class="hot-search">
         <span>热门搜索:</span>
@@ -26,7 +26,27 @@
 
 <script>
 export default {
-  name: 'IndexHome'
+  name: 'IndexHome',
+  data(){
+    return{
+      inpValue:'',
+    }
+  },
+  methods :{
+    goSearch(){
+      // this.$router.push(`/search?key=${this.inpValue}`)
+      // this.$router.push(`/search/${this.inpValue}`)
+      this.$router.push({
+        name:'search',
+        params:{
+          words:this.inpValue
+        }
+        // query:{
+        //   key:this.inpValue
+        // }
+      })
+    }
+  }
 }
 </script>
 

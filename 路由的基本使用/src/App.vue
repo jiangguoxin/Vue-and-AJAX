@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <!-- <div class="link">
+    <div class="link">
       <router-link to="/my">我的音乐</router-link>
       <router-link to="/friend">朋友</router-link>
       <router-link to="/find">发现音乐</router-link>
       <router-link to="/home">首页</router-link>
       <router-link to="/search">搜索页</router-link>
-    </div> -->
+    </div>
     <router-view></router-view>
   </div>
 </template>
